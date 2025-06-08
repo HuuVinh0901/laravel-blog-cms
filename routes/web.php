@@ -6,10 +6,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/client', function () {
-    return view('client');
-});
-
-Route::get('/admin', function () {
+Route::get('/admin/{any?}', function () {
     return view('admin');
-});
+})->where('any', '.*');
+
+Route::get('/{any?}', function () {
+    return view('client');
+})->where('any', '.*');
