@@ -8,4 +8,6 @@ const apiClient = axios.create({
 export const registerUser = (userData) => apiClient.post('/register', userData);
 
 export const loginUser = (credentials) => apiClient.post('/login', credentials);
+export const getCategories = () => apiClient.get('/categories');
+export const getPosts = () => apiClient.get('/posts');
 

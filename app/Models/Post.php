@@ -20,20 +20,26 @@ class Post extends Model
     ];
 
     // Quan hệ: bài viết thuộc về người dùng
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
     // Quan hệ: bài viết thuộc danh mục
-    public function category() {
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 
     // Quan hệ: bài viết có nhiều comment
-    public function comments() {
+    public function comments()
+    {
         return $this->hasMany(Comment::class);
     }
-
+    public function likedUsers()
+    {
+        return $this->belongsToMany(User::class, 'post_user_likes')->withTimestamps();
+    }
     // Quan hệ: bài viết có nhiều tag (n-n)
     // public function tags() {
     //     return $this->belongsToMany(Tag::class, 'post_tags');
