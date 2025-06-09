@@ -9,19 +9,41 @@ class PostController extends Controller
 {
     public function index()
     {
-        return Post::with(['category', 'likedUsers'])->withCount('likedUsers')->orderBy('created_at', 'desc')->get();
+        return Post::with(['user:id,name,avatar', 'category', 'likedUsers'])
+            ->withCount('likedUsers')
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
-    // GET /api/posts/{id}
     public function show($id)
     {
-        $post = Post::find($id);
+        $post = Post::with(['user:id,name,avatar', 'category', 'likedUsers']) 
+            ->withCount('likedUsers')
+            ->find($id);
+
         if (!$post) {
             return response()->json(['message' => 'Post not found'], 404);
         }
+
         return response()->json($post);
     }
-
+    public function getPostsByUser($userId)
+    {
+        $posts = Post::with(['user:id,name,avatar', 'category', 'likedUsers'])
+            ->withCount('likedUsers')
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        if ($posts->isEmpty()) {
+            return response()->json([
+                'message' => 'No posts found for this user'
+            ], 404);
+        }
+    
+        return response()->json($posts);
+    }
+    
     // POST /api/posts
     // public function store(Request $request)
     // {

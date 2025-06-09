@@ -4,10 +4,15 @@ const apiClient = axios.create({
   baseURL: apiUrl,
   headers: { 'Content-Type': 'application/json' },
 });
-
+//Auth
 export const registerUser = (userData) => apiClient.post('/register', userData);
-
 export const loginUser = (credentials) => apiClient.post('/login', credentials);
+//Category
 export const getCategories = () => apiClient.get('/categories');
-export const getPosts = () => apiClient.get('/posts');
 
+//Post
+export const getPosts = () => apiClient.get('/posts');
+export const getPostById = (id) => apiClient.get(`/posts/${id}`);
+export const getPostByUser = (userId) => apiClient.get(`/posts/users/${userId}`);
+//User
+export const getUserById = (id) => apiClient.get(`/users/${id}`);

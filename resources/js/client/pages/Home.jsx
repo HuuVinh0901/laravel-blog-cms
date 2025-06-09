@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import FeaturedPost from '../components/FeaturedPost';
-import PostList from '../components/PostList';
-import RelatedPosts from '../components/RelatedPosts';
-import Categories from '../components/Categories';
+import FeaturedPost from '../components/ui/post/FeaturedPost';
+import PostList from '../components/ui/post/PostList';
+import RelatedPosts from '../components/ui/post/RelatedPosts';
+import Categories from '../components/ui/Categories';
+import Loading from '../components/Loading'; // Import component loading
 import { getPosts } from '../../api/apiClient';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [featuredPost, setFeaturedPost] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -18,11 +20,15 @@ const Home = () => {
         setFeaturedPost(maxLikedPost);
       } catch (error) {
         console.error('Lỗi khi tải bài viết:', error);
+      } finally {
+        setLoading(false); // Dừng loading khi hoàn thành hoặc lỗi
       }
     };
 
     fetchPosts();
   }, []);
+
+  if (loading) return <Loading />;
 
   return (
     <main className="container mx-auto p-4">
