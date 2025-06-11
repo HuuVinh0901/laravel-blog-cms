@@ -7,13 +7,19 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index()
-    {
-        return Post::with(['user:id,name,avatar', 'category', 'likedUsers'])
-            ->withCount('likedUsers')
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
+    public function index(Request $request)
+{
+    $perPage = 3;
+    $page = $request->input('page', 1); 
+
+    $posts = Post::with(['user:id,name,avatar', 'category', 'likedUsers'])
+        ->withCount('likedUsers')
+        ->orderBy('created_at', 'desc')
+        ->paginate($perPage, ['*'], 'page', $page);
+
+    return response()->json($posts);
+}
+
 
     public function show($id)
     {
@@ -43,7 +49,26 @@ class PostController extends Controller
     
         return response()->json($posts);
     }
-    
+    public function getPostsByCategory($categoryId, Request $request)
+{
+    $perPage = 3;
+    $page = $request->input('page', 1); 
+
+    $posts = Post::with(['user:id,name,avatar', 'category', 'likedUsers'])
+        ->withCount('likedUsers')
+        ->where('category_id', $categoryId)
+        ->orderBy('created_at', 'desc')
+        ->paginate($perPage, ['*'], 'page', $page);
+
+    if ($posts->isEmpty()) {
+        return response()->json([
+            'message' => 'No posts found for this category'
+        ], 404);
+    }
+
+    return response()->json($posts);
+}
+
     // POST /api/posts
     // public function store(Request $request)
     // {

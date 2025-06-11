@@ -15,5 +15,6 @@ Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/posts', [PostController::class, 'index']);
 Route::get('/posts/{id}', [PostController::class, 'show']);
 Route::get('/posts/users/{userId}', [PostController::class, 'getPostsByUser']);
+Route::get('/posts/categories/{id}', [PostController::class, 'getPostsByCategory']);
 //User
 Route::get('/users/{id}', [UserController::class, 'getUserById']);

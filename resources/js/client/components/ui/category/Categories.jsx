@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { getCategories } from '../../../api/apiClient'; 
+import { useNavigate } from 'react-router-dom';
+import { getCategories } from '../../../../api/apiClient'; 
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [visibleCategories, setVisibleCategories] = useState(5); // Hiển thị 5 mục ban đầu
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +28,10 @@ const Categories = () => {
     setVisibleCategories(5); // Quay lại 5 mục ban đầu
   };
 
+  const handleCategoryClick = (categoryId) => {
+    navigate(`/category/${categoryId}`);
+  };
+
   return (
     <div className="bg-white rounded-3xl shadow-lg p-4">
       <h3 className="text-xl font-bold text-gray-900 mb-2">Danh mục ({categories.length})</h3>
@@ -33,7 +39,8 @@ const Categories = () => {
         {categories.slice(0, visibleCategories).map((category) => (
           <span
             key={category.id}
-            className="bg-blue-100 text-blue-600 text-sm font-medium px-2 py-1 rounded-full inline-block whitespace-nowrap"
+            onClick={() => handleCategoryClick(category.id)}
+            className="bg-blue-100 text-blue-600 text-sm font-medium px-2 py-1 rounded-full inline-block whitespace-nowrap cursor-pointer hover:bg-blue-200"
           >
             {category.name}
           </span>

@@ -11,7 +11,14 @@ export const loginUser = (credentials) => apiClient.post('/login', credentials);
 export const getCategories = () => apiClient.get('/categories');
 
 //Post
-export const getPosts = () => apiClient.get('/posts');
+export const getPosts = (page = 1) =>
+  apiClient.get('/posts', {
+    params: { page },
+  });
+  export const getPostsByCategory = (categoryId, page = 1) =>
+    apiClient.get(`/posts/categories/${categoryId}`, {
+      params: { page },
+    });
 export const getPostById = (id) => apiClient.get(`/posts/${id}`);
 export const getPostByUser = (userId) => apiClient.get(`/posts/users/${userId}`);
 //User

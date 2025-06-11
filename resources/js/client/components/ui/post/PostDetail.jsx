@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPostById } from '../../../api/apiClient'; // Giả sử có API để lấy chi tiết bài viết
-
+import { getPostById } from '../../../../api/apiClient';
+import Loading from '../../Loading';
 const PostDetail = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+  const [loading, setLoading] = useState(true);
   const fallbackImage = "/images/no-image.png";
-  const defaultAvatar = "/images/default-avatar.png"; // Placeholder cho avatar
+  const defaultAvatar = "/images/default-avatar.png"; 
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -17,12 +18,14 @@ const PostDetail = () => {
         setPost(response.data);
       } catch (error) {
         console.error('Lỗi khi tải chi tiết bài viết:', error);
+      } finally {
+        setLoading(false); 
       }
     };
 
     fetchPost();
   }, [id]);
-
+  
   // Giả lập danh sách comment (bạn có thể thay bằng API thực tế)
   useEffect(() => {
     if (post) {
@@ -44,7 +47,7 @@ const PostDetail = () => {
     }
   };
 
-  if (!post) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
   return (
     <div className="container mx-auto p-4">
@@ -111,7 +114,7 @@ const PostDetail = () => {
               Gửi
             </button>
           </form>
-          <div className="max-h-60 overflow-y-auto pr-2 space-y-4"> {/* Chiều cao cố định với scroll và khoảng cách giữa comment */}
+          <div className="max-h-60 overflow-y-auto pr-2 space-y-4"> 
             {comments.map((comment) => (
               <div key={comment.id} className="flex items-start bg-gray-50 p-3 rounded-lg">
                 <img

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
 const FeaturedPost = ({ post }) => {
   const fallbackImage = "/images/no-image.png";
   const [likes, setLikes] = useState(post.liked_users_count);
@@ -16,7 +17,7 @@ const FeaturedPost = ({ post }) => {
   };
 
   return (
-    <Link to={`/blog/${post.id}`} key={post.id} className="block">
+    <Link to={`/post/${post.id}`} key={post.id} className="block">
       <div className="flex flex-col md:flex-row gap-4 bg-white rounded-3xl shadow-lg p-4 h-full">
         <div className="w-full md:w-1/2">
           <img
@@ -28,8 +29,10 @@ const FeaturedPost = ({ post }) => {
         </div>
         <div className="w-full md:w-1/2 flex flex-col justify-between">
           <div>
-            <div className="flex items-center space-x-2">
-              <span className="bg-orange-100 text-orange-600 text-sm font-medium px-2 py-1 rounded-full">{post.category.name}</span>
+            <div className="flex items-center space-x-4">
+              <span className="bg-orange-100 text-orange-600 text-sm font-medium px-2 py-1 rounded-full">
+                {post.category.name}
+              </span>
               <span className="text-gray-500 text-sm">
                 {new Date(post.created_at).toLocaleString()}
               </span>
@@ -50,7 +53,7 @@ const FeaturedPost = ({ post }) => {
           </div>
         </div>
       </div>
-      /</Link>
+    </Link>
   );
 };
 
