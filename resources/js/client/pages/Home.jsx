@@ -3,20 +3,19 @@ import FeaturedPost from '../components/ui/post/FeaturedPost';
 import PostList from '../components/ui/post/LatestPost';
 import RelatedPosts from '../components/ui/post/RelatedPosts';
 import Categories from '../components/ui/category/Categories';
-import Loading from '../components/Loading'; 
+import Loading from '../components/Loading';
 import { getPosts } from '../../api/apiClient';
-
+import { useAuth } from '../../context/AuthContext';
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [featuredPost, setFeaturedPost] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const { fetchUser } = useAuth();
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await getPosts();
         setPosts(response.data.data);
-        console.log(response.data.data);
         const maxLikedPost = response.data.data.reduce((max, post) => max.liked_users_count > post.liked_users_count ? max : post);
         setFeaturedPost(maxLikedPost);
       } catch (error) {
@@ -25,7 +24,7 @@ const Home = () => {
         setLoading(false);
       }
     };
-
+    fetchUser()
     fetchPosts();
   }, []);
 
