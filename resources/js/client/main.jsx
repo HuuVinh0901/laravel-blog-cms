@@ -13,7 +13,8 @@ import CreatePost from './components/ui/post/CreatePost';
 import NewsFeed from './components/ui/newFeed/NewsFeed';
 import CategoryDetail from './components/ui/category/CategoryDetail';
 import { AuthProvider } from '../context/AuthContext';
-import TestCookie from './TestCookiew';
+const container = document.getElementById('client');
+const root = ReactDOM.createRoot(container);
 const ClientApp = () => (
   <Router>
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -29,7 +30,7 @@ const ClientApp = () => (
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/new-feed" element={<NewsFeed />} />
           <Route path="/category/:categoryId" element={<CategoryDetail />} />
-          <Route path="/test" element={<TestCookie />} />
+        
         </Routes>
       </div>
       <Footer />
@@ -37,7 +38,6 @@ const ClientApp = () => (
   </Router>
 );
 
-const root = ReactDOM.createRoot(document.getElementById('client'));
 root.render(
   <AuthProvider>
     <ClientApp />

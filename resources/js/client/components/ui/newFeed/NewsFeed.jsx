@@ -69,7 +69,9 @@ const NewsFeed = () => {
                                     className="w-10 h-10 rounded-full mr-3"
                                 />
                                 <div>
-                                    <p className="font-medium text-gray-900">{post.user.name}</p>
+                                    <Link to={`/profile/${post.user?.id}`}>
+                                        <p className="font-medium text-gray-900">{post.user.name}</p>
+                                    </Link>
                                     <p className="text-sm text-gray-500">
                                         {new Date(post.created_at).toLocaleString()}
                                     </p>

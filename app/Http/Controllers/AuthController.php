@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RefreshToken;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -46,37 +48,85 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        $user = User::where('email', $credentials['email'])->first();
-        if (!$user) {
-            return response()->json([
-                'error' => 'Email chưa được đăng ký'
-            ], 404);
+        $userValidationResult = $this->validateUserCredentials($credentials['email'], $credentials['password']);
+        if ($userValidationResult instanceof JsonResponse) {
+            return $userValidationResult;
         }
 
-        if (! $accessToken = JWTAuth::attempt($credentials)) {
-            return response()->json([
-                'error' => 'Mật khẩu không đúng'
-            ], 401);
-        }
+        $user = JWTAuth::user();
 
         try {
-            $user = JWTAuth::user();
-
+            $accessToken = JWTAuth::fromUser($user);
             $refreshToken = bin2hex(random_bytes(64));
 
-            $user->refresh_token = $refreshToken;
-            $user->save();
+            RefreshToken::create([
+                'user_id' => $user->id,
+                'token' => hash('sha256', $refreshToken),
+                'expires_at' => now()->addDays(7),
+            ]);
 
             return $this->respondWithToken($accessToken, $refreshToken);
         } catch (JWTException $e) {
             return response()->json(['error' => 'Không thể tạo token'], 500);
         }
     }
+    public function refreshToken(Request $request)
+    {
+        $token = $request->refresh_token;
+        $user = User::find($token->user_id);
+
+        if (!$user) {
+            return response()->json(['error' => 'Người dùng không tồn tại'], 404);
+        }
+
+        try {
+            $accessToken = JWTAuth::fromUser($user);
+            $newRefreshToken = bin2hex(random_bytes(64));
+
+            // Cập nhật refresh token cũ
+            $token->update([
+                'token' => hash('sha256', $newRefreshToken),
+                'expires_at' => now()->addDays(7),
+                'revoked' => false,
+            ]);
+
+            return $this->respondWithToken($accessToken, $newRefreshToken);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Không thể làm mới token'], 500);
+        }
+    }
+    public function logout(Request $request)
+    {
+        $refreshToken = $request->cookie('refresh_token');
+        if ($refreshToken) {
+            RefreshToken::where('token', hash('sha256', $refreshToken))
+                ->update(['revoked' => true]);
+        }
+
+        return response()
+            ->json(['message' => 'Đăng xuất thành công'])
+            ->cookie('access_token', null, -1)
+            ->cookie('refresh_token', null, -1);
+    }
     public function me()
     {
-        $user = JWTAuth::user(); 
+        $user = JWTAuth::user();
 
         return response()->json($user);
+    }
+    protected function validateUserCredentials($email, $password)
+    {
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'Email chưa được đăng ký'], 404);
+        }
+
+        if (!JWTAuth::attempt(['email' => $email, 'password' => $password])) {
+            return response()->json(['error' => 'Mật khẩu không đúng'], 401);
+        }
+
+        return $user;
     }
     protected function respondWithToken($accessToken, $refreshToken)
     {

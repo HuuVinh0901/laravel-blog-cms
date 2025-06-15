@@ -10,8 +10,8 @@ use App\Http\Controllers\UserController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
-
-    // Sử dụng middleware web + jwt.cookie để đọc được cookie
+    Route::post('logout',[AuthController::class, 'logout'])->middleware('refresh.token');
+    Route::post('refresh', [AuthController::class, 'refreshToken'])->middleware('refresh.token');
     Route::get('me', [AuthController::class, 'me'])->middleware('jwt.cookie');
 });
 

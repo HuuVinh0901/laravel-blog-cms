@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { getPostById } from '../../../../api/apiClient';
 import Loading from '../../Loading';
 const PostDetail = () => {
@@ -9,7 +9,7 @@ const PostDetail = () => {
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
   const fallbackImage = "/images/no-image.png";
-  const defaultAvatar = "/images/default-avatar.png"; 
+  const defaultAvatar = "/images/default-avatar.png";
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -19,13 +19,13 @@ const PostDetail = () => {
       } catch (error) {
         console.error('Lỗi khi tải chi tiết bài viết:', error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
     fetchPost();
   }, [id]);
-  
+
   // Giả lập danh sách comment (bạn có thể thay bằng API thực tế)
   useEffect(() => {
     if (post) {
@@ -58,18 +58,23 @@ const PostDetail = () => {
           onError={(e) => { e.target.onerror = null; e.target.src = fallbackImage; }}
           className="w-full max-h-64 object-contain rounded-2xl mb-6"
         />
+
         <div className="flex items-center mb-6">
           <img
             src={post.user?.avatar || defaultAvatar}
-            alt={post.user.name || 'Author'}
+            alt={post.user?.name || 'Author'}
             onError={(e) => { e.target.onerror = null; e.target.src = defaultAvatar; }}
             className="w-10 h-10 rounded-full mr-3"
           />
           <div>
-            <p className="text-gray-900 font-medium">{post.user.name || 'Unknown Author'}</p>
+            <Link to={`/profile/${post.user?.id}`}>
+              <p className="text-gray-900 font-medium">{post.user?.name || 'Unknown Author'}</p>
+            </Link>
             <p className="text-gray-500 text-sm">{new Date(post.created_at).toLocaleDateString()}</p>
           </div>
         </div>
+
+
         <span className="bg-orange-100 text-orange-600 text-sm font-medium px-3 py-1 rounded-full">
           {post.category.name}
         </span>
@@ -114,7 +119,7 @@ const PostDetail = () => {
               Gửi
             </button>
           </form>
-          <div className="max-h-60 overflow-y-auto pr-2 space-y-4"> 
+          <div className="max-h-60 overflow-y-auto pr-2 space-y-4">
             {comments.map((comment) => (
               <div key={comment.id} className="flex items-start bg-gray-50 p-3 rounded-lg">
                 <img

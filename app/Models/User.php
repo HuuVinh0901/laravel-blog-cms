@@ -24,9 +24,8 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'role',
         'avatar',
-        'refresh_token'
     ];
-    
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -50,7 +49,8 @@ class User extends Authenticatable implements JWTSubject
             'password' => 'hashed',
         ];
     }
-    public function likedPosts() {
+    public function likedPosts()
+    {
         return $this->belongsToMany(Post::class, 'post_user_likes')->withTimestamps();
     }
     public function getJWTIdentifier()
@@ -60,5 +60,9 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+    public function refreshTokens()
+    {
+        return $this->hasMany(RefreshToken::class);
     }
 }

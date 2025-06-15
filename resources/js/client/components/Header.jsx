@@ -4,11 +4,9 @@ import { useAuth } from '../../context/AuthContext';
 import defaultAvatar from '../../../../public/images/default-avatar.png';
 
 const Header = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth(); // Thêm loading từ AuthContext
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
-  console.log("tên", user);
 
   const handleAvatarClick = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -28,6 +26,20 @@ const Header = () => {
     };
   }, []);
 
+  // Nếu đang loading, hiển thị placeholder hoặc không render gì
+  if (loading) {
+    return (
+      <header className="bg-white p-4 shadow-sm">
+        <div className="container mx-auto flex justify-between items-center">
+          <Link to="/" className="text-2xl font-bold text-gray-800 tracking-wider">
+            Citizens
+          </Link>
+          <div className="w-24 h-10 bg-gray-200 animate-pulse rounded-full"></div> {/* Placeholder */}
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="bg-white p-4 shadow-sm">
       <div className="container mx-auto flex justify-between items-center">
@@ -38,16 +50,14 @@ const Header = () => {
         <nav className="flex space-x-8 text-gray-600">
           <Link to="/" className="hover:text-blue-600 font-medium">Trang chủ</Link>
           <Link to="/new-feed" className="hover:text-blue-600 font-medium">Blog</Link>
-          <Link to="/contact" className="hover:text-blue-600 font-medium">Danh mục</Link>
+          <Link to="/category/1" className="hover:text-blue-600 font-medium">Danh mục</Link>
           <Link to="/about" className="hover:text-blue-600 font-medium">Về chúng tôi</Link>
         </nav>
         <div className="flex items-center space-x-6">
           {user ? (
             <div className="relative" ref={dropdownRef}>
               <div className="flex items-center space-x-3">
-                <span
-                  className="text-gray-700 font-semibold text-sm bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100 transition-colors duration-200"
-                >
+                <span className="text-gray-700 font-semibold text-sm bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100 transition-colors duration-200">
                   {user.name}
                 </span>
                 <img
@@ -60,7 +70,7 @@ const Header = () => {
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                   <Link
-                    to="/profile"
+                    to="/profile" // Sửa thành /profile vì đây là user hiện tại
                     onClick={() => setIsDropdownOpen(false)}
                     className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-t-lg"
                   >

@@ -18,7 +18,6 @@ class JwtMiddleware extends BaseMiddleware
             $user = JWTAuth::setToken($token)->authenticate();
             if (!$user) return response()->json(['error' => 'Người dùng không tồn tại'], 404);
 
-            // Gán user vào request để controller dùng
             $request->merge(['auth_user' => $user]);
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             return response()->json(['error' => 'Token đã hết hạn'], 401);

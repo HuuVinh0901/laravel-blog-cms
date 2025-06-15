@@ -8,22 +8,22 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
     public function index(Request $request)
-{
-    $perPage = 3;
-    $page = $request->input('page', 1); 
+    {
+        $perPage = 3;
+        $page = $request->input('page', 1);
 
-    $posts = Post::with(['user:id,name,avatar', 'category', 'likedUsers'])
-        ->withCount('likedUsers')
-        ->orderBy('created_at', 'desc')
-        ->paginate($perPage, ['*'], 'page', $page);
+        $posts = Post::with(['user:id,name,avatar', 'category', 'likedUsers'])
+            ->withCount('likedUsers')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page', $page);
 
-    return response()->json($posts);
-}
+        return response()->json($posts);
+    }
 
 
     public function show($id)
     {
-        $post = Post::with(['user:id,name,avatar', 'category', 'likedUsers']) 
+        $post = Post::with(['user:id,name,avatar', 'category', 'likedUsers'])
             ->withCount('likedUsers')
             ->find($id);
 
@@ -40,34 +40,28 @@ class PostController extends Controller
             ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get();
-    
-        if ($posts->isEmpty()) {
-            return response()->json([
-                'message' => 'No posts found for this user'
-            ], 404);
-        }
-    
-        return response()->json($posts);
+
+        return response()->json([
+            'data' => $posts,
+            'message' => $posts->isEmpty() ? 'No posts found for this user' : 'Posts retrieved successfully'
+        ], 200);
     }
     public function getPostsByCategory($categoryId, Request $request)
-{
-    $perPage = 3;
-    $page = $request->input('page', 1); 
+    {
+        $perPage = 3;
+        $page = $request->input('page', 1);
 
-    $posts = Post::with(['user:id,name,avatar', 'category', 'likedUsers'])
-        ->withCount('likedUsers')
-        ->where('category_id', $categoryId)
-        ->orderBy('created_at', 'desc')
-        ->paginate($perPage, ['*'], 'page', $page);
+        $posts = Post::with(['user:id,name,avatar', 'category', 'likedUsers'])
+            ->withCount('likedUsers')
+            ->where('category_id', $categoryId)
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage, ['*'], 'page', $page);
 
-    if ($posts->isEmpty()) {
         return response()->json([
-            'message' => 'No posts found for this category'
-        ], 404);
+            'data' => $posts,
+            'message' => $posts->isEmpty() ? 'No posts found for this category' : 'Posts retrieved successfully'
+        ], 200);
     }
-
-    return response()->json($posts);
-}
 
     // POST /api/posts
     // public function store(Request $request)

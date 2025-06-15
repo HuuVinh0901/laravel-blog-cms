@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'jwt.cookie' => \App\Http\Middleware\JwtMiddleware::class,
+            'refresh.token' => \App\Http\Middleware\RefreshTokenMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
