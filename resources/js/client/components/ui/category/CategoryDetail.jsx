@@ -11,6 +11,8 @@ const CategoryDetail = () => {
   const [selectedCategory, setSelectedCategory] = useState(categoryId || '');
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const fallbackImage = "/images/no-image.png";
 
   useEffect(() => {
@@ -19,11 +21,12 @@ const CategoryDetail = () => {
       try {
         const [categoryResponse, postsResponse] = await Promise.all([
           getCategories(),
-          getPostsByCategory(categoryId),
+          getPostsByCategory(categoryId, currentPage), 
         ]);
-
+        console.log('Category Response:', postsResponse.data.data.last_page);
         setCategories(categoryResponse.data);
         setPosts(postsResponse.data.data.data || []);
+        setTotalPages(postsResponse.data.data.last_page || 1);
 
         if (categoryId) {
           setSelectedCategory(categoryId);
@@ -38,11 +41,12 @@ const CategoryDetail = () => {
     };
 
     fetchData();
-  }, [categoryId]);
+  }, [categoryId, currentPage]);
 
   useEffect(() => {
     if (categoryId !== selectedCategory) {
       setSelectedCategory(categoryId || '');
+      setCurrentPage(1);
     }
   }, [categoryId, selectedCategory]);
 
@@ -50,6 +54,11 @@ const CategoryDetail = () => {
     setSelectedCategory(newCategoryId);
     navigate(`/category/${newCategoryId}`);
     setIsOpen(false);
+    setCurrentPage(1); 
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   if (loading) return <Loading />;
@@ -172,6 +181,35 @@ const CategoryDetail = () => {
           </div>
         )}
       </div>
+
+      {/* Pagination */}
+      {posts.length > 0 && totalPages > 1 && (
+        <div className="flex justify-center gap-2 mt-4">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 hover:bg-gray-300"
+          >
+            Previous
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`px-3 py-1 rounded ${currentPage === page ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+            >
+              {page}
+            </button>
+          ))}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 hover:bg-gray-300"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

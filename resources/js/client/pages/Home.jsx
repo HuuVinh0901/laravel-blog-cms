@@ -11,10 +11,12 @@ const Home = () => {
   const [featuredPost, setFeaturedPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const { fetchUser } = useAuth();
+  
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await getPosts();
+        console.log(response.data.data)
         setPosts(response.data.data);
         const maxLikedPost = response.data.data.reduce((max, post) => max.liked_users_count > post.liked_users_count ? max : post);
         setFeaturedPost(maxLikedPost);

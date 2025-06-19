@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const FeaturedPost = ({ post }) => {
   const fallbackImage = "/images/no-image.png";
   const [likes, setLikes] = useState(post.liked_users_count);
-
+  console.log("Nhận",post)
   const handleLike = () => {
     setLikes(likes + 1);
   };

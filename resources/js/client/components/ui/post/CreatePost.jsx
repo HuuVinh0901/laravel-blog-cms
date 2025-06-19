@@ -1,7 +1,9 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCategories } from '../../../../api/apiClient';
+import { getCategories, createPost } from '../../../../api/apiClient'; 
 import Loading from '../../Loading';
+import { ToastContainer, toast } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -9,13 +11,14 @@ const CreatePost = () => {
     title: '',
     content: '',
     thumbnail: null,
-    category: '',
+    category_id: '', 
+    is_published: false, 
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [previewImage, setPreviewImage] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -28,46 +31,63 @@ const CreatePost = () => {
 
     fetchCategories();
   }, []);
+
   const handleCategoryChange = (e) => {
-    const selected = e.target.value;
-    setFormData((prev) => ({ ...prev, category: selected }));
-    setSelectedCategory(selected);
+    const categoryId = e.target.value;
+    setFormData((prev) => ({ ...prev, category_id: categoryId }));
   };
+
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setFormData((prev) => ({ ...prev, thumbnail: file }));
-      setPreviewImage(URL.createObjectURL(file)); // Tạo URL để xem trước hình ảnh
+      setPreviewImage(URL.createObjectURL(file));
     }
   };
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // setError('');
-    // setLoading(true);
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    // // Tạo FormData để gửi file và các trường khác
-    // const data = new FormData();
-    // data.append('title', formData.title);
-    // data.append('content', formData.content);
-    // if (formData.thumbnail) {
-    //   data.append('thumbnail', formData.thumbnail);
-    // }
+    if (!formData.title || !formData.content || !formData.category_id) {
+      setError('Vui lòng điền đầy đủ tiêu đề, nội dung và danh mục.');
+      setLoading(false);
+      return;
+    }
 
-    // try {
-    //   await createPost(data); // Gọi API để tạo bài viết
-    //   navigate('/profile'); // Chuyển hướng về trang profile sau khi tạo thành công
-    // } catch (error) {
-    //   setError('Lỗi khi tạo bài viết. Vui lòng thử lại.');
-    //   console.error('Lỗi khi tạo bài viết:', error);
-    // } finally {
-    //   setLoading(false);
-    // }
+    const data = new FormData();
+    data.append('title', formData.title);
+    data.append('content', formData.content);
+    if (formData.thumbnail) data.append('thumbnail', formData.thumbnail);
+    data.append('category_id', formData.category_id);
+    // data.append('is_published', formData.is_published ? 'true' : 'false'); // Thử gửi "true"/"false"
+
+    // Debug dữ liệu gửi đi
+    for (let [key, value] of data.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    try {
+      const response = await createPost(data); 
+      console.log('Bài viết đã được tạo:', response.data);
+      toast.success('Bài viết đã được tạo thành công!', {
+        position: 'top-right',
+        autoClose: 3000,
+        onClose: () => navigate(`/post/${response.data.id}`), 
+      });
+    } catch (error) {
+      setError(error.response?.data?.message || 'Lỗi khi tạo bài viết. Vui lòng thử lại.');
+      console.error('Lỗi chi tiết:', error.response?.data);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) return <Loading />;
@@ -79,13 +99,13 @@ const CreatePost = () => {
         {error && <p className="text-red-600 mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="category" className="block text-gray-700 font-medium mb-2">
+            <label htmlFor="category_id" className="block text-gray-700 font-medium mb-2">
               Danh mục
             </label>
             <select
-              id="category"
-              name="category"
-              value={formData.category}
+              id="category_id"
+              name="category_id"
+              value={formData.category_id}
               onChange={handleCategoryChange}
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
               required
@@ -114,7 +134,6 @@ const CreatePost = () => {
             />
           </div>
 
-          {/* Trường nội dung */}
           <div>
             <label htmlFor="content" className="block text-gray-700 font-medium mb-2">
               Nội dung
@@ -131,7 +150,6 @@ const CreatePost = () => {
             ></textarea>
           </div>
 
-          {/* Trường hình ảnh đại diện */}
           <div>
             <label htmlFor="thumbnail" className="block text-gray-700 font-medium mb-2">
               Hình ảnh đại diện
@@ -153,7 +171,21 @@ const CreatePost = () => {
             )}
           </div>
 
-          {/* Nút gửi và hủy */}
+          <div>
+            <label htmlFor="is_published" className="block text-gray-700 font-medium mb-2">
+              Đăng ngay
+            </label>
+            <input
+              type="checkbox"
+              id="is_published"
+              name="is_published"
+              checked={formData.is_published}
+              onChange={handleInputChange}
+              className="mr-2 leading-tight"
+            />
+            <span className="text-gray-700">Đăng bài ngay khi tạo</span>
+          </div>
+
           <div className="flex justify-end space-x-4">
             <button
               type="button"
@@ -171,6 +203,7 @@ const CreatePost = () => {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };

@@ -81,6 +81,7 @@ export const getPostsByCategory = (categoryId, page = 1) =>
   });
 export const getPostById = (id) => apiClient.get(`/posts/${id}`);
 export const getPostByUser = (userId) => apiClient.get(`/posts/users/${userId}`);
+export const createPost = (data) => apiClient.post('/posts', data);
 //User
 export const getUserById = (id) => apiClient.get(`/users/${id}`);
 
