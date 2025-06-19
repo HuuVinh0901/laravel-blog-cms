@@ -16,7 +16,6 @@ const Home = () => {
     const fetchPosts = async () => {
       try {
         const response = await getPosts();
-        console.log(response.data.data)
         setPosts(response.data.data);
         const maxLikedPost = response.data.data.reduce((max, post) => max.liked_users_count > post.liked_users_count ? max : post);
         setFeaturedPost(maxLikedPost);
@@ -48,7 +47,7 @@ const Home = () => {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold text-gray-900">Bài viết mới nhất</h2>
           <a
-            href="/posts"
+            href="/new-feed"
             className="flex items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-md"
           >
             Xem tất cả
