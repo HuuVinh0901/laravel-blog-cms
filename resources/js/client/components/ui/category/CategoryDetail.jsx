@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getCategories, getPostsByCategory } from '../../../../api/apiClient';
-import Loading from '../../Loading';
+import { getCategories, getPostsByCategory } from '../../../../shared/api/apiClient';
+import Loading from '../../../../shared/components/Loading';
 
 const CategoryDetail = () => {
   const { categoryId } = useParams();

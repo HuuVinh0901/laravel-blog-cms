@@ -134,7 +134,8 @@ class AuthController extends Controller
             ->json([
                 'message' => 'Đăng nhập thành công',
                 'token_type' => 'bearer',
-                'expires_in' => config('jwt.ttl') * 60
+                'expires_in' => config('jwt.ttl') * 60,
+                'role' => JWTAuth::user()->role,
             ])
             ->cookie('access_token', $accessToken, config('jwt.ttl'), '/', null, true, true, false, 'Strict')
             ->cookie('refresh_token', $refreshToken, 43200, '/', null, true, true, false, 'Strict'); // 30 ngày

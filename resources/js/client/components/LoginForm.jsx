@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { loginUser } from '../../api/apiClient';
+import { loginUser } from '../../shared/api/apiClient';
 import { ToastContainer, toast } from 'react-toastify';
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -39,9 +39,14 @@ const LoginForm = () => {
       return;
     }
     try {
-      await loginUser(formData);
+      const data = await loginUser(formData); 
       toast.success('Đăng nhập thành công!');
-      navigate('/');
+      console.log(data.data.role);
+      if (data.data.role === 'admin') {
+        window.location.href = '/admin';
+      } else {
+        window.location.href = '/';
+      }
     } catch (err) {
       const message = err.response?.data?.error;
       toast.error(message);

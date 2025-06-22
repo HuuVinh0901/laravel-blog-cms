@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate,Link } from 'react-router-dom';
-import { getCategories } from '../../../../api/apiClient';
+import { getCategories } from '../../../../shared/api/apiClient';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);

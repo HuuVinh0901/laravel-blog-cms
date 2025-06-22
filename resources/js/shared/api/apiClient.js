@@ -46,11 +46,12 @@ apiClient.interceptors.response.use(
 
       try {
         const result=await refreshToken();
-        console.log(result) 
+        
         processQueue(null);
         return apiClient(originalRequest); 
       } catch (err) {
         processQueue(err);
+        console.log("Kết quả",err) 
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
@@ -84,4 +85,5 @@ export const getPostByUser = (userId) => apiClient.get(`/posts/users/${userId}`)
 export const createPost = (data) => apiClient.post('/posts', data);
 //User
 export const getUserById = (id) => apiClient.get(`/users/${id}`);
+export const getAllUsers = () => apiClient.get(`/admin/users`);
 

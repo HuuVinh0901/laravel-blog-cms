@@ -12,7 +12,7 @@ import OtherProfile from './components/ui/profile/OtherProfile';
 import CreatePost from './components/ui/post/CreatePost';
 import NewsFeed from './components/ui/newFeed/NewsFeed';
 import CategoryDetail from './components/ui/category/CategoryDetail';
-import { AuthProvider } from '../context/AuthContext';
+import { AuthProvider } from '../shared/context/AuthContext';
 const container = document.getElementById('client');
 const root = ReactDOM.createRoot(container);
 const ClientApp = () => (

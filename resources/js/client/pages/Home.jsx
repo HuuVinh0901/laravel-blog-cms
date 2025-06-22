@@ -3,9 +3,9 @@ import FeaturedPost from '../components/ui/post/FeaturedPost';
 import PostList from '../components/ui/post/LatestPost';
 import RelatedPosts from '../components/ui/post/RelatedPosts';
 import Categories from '../components/ui/category/Categories';
-import Loading from '../components/Loading';
-import { getPosts } from '../../api/apiClient';
-import { useAuth } from '../../context/AuthContext';
+import Loading from '../../shared/components/Loading';
+import { getPosts } from '../../shared/api/apiClient';
+import { useAuth } from '../../shared/context/AuthContext';
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [featuredPost, setFeaturedPost] = useState(null);

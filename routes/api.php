@@ -30,14 +30,10 @@ Route::get('/posts/categories/{id}', [PostController::class, 'getPostsByCategory
 Route::post('/posts', [PostController::class, 'store'])->middleware('jwt.cookie');
 //User
 Route::get('/users/{id}', [UserController::class, 'getUserById']);
-Route::get('/test-cookie', function () {
-    return response()->json([
-        'cookies' => request()->cookies->all()
-    ]);
-});
+
+
 Route::post('/upload-image', [UploadController::class, 'uploadImage']);
-Route::post('/test-upload', [UploadController::class, 'testUpload']);
-Route::get('/test-cache', function () {
-    Cache::put('test_key', 'hello_redis', 60); // Lưu vào Redis trong 60 giây
-    return Cache::get('test_key');
+//ADmin
+Route::prefix('admin')->middleware('check.admin')->group(function () {
+    Route::get('/users', [UserController::class, 'index']);
 });

@@ -1,18 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../shared/context/AuthContext';
 import defaultAvatar from '../../../../public/images/default-avatar.png';
 
 const Header = () => {
-  const { user, logout, loading } = useAuth(); // Thêm loading từ AuthContext
+  const { user, logout, loading } = useAuth(); 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
   const handleAvatarClick = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // Xử lý click ra ngoài để đóng dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -27,18 +25,18 @@ const Header = () => {
   }, []);
 
   // Nếu đang loading, hiển thị placeholder hoặc không render gì
-  if (loading) {
-    return (
-      <header className="bg-white p-4 shadow-sm">
-        <div className="container mx-auto flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-gray-800 tracking-wider">
-            Citizens
-          </Link>
-          <div className="w-24 h-10 bg-gray-200 animate-pulse rounded-full"></div> {/* Placeholder */}
-        </div>
-      </header>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <header className="bg-white p-4 shadow-sm">
+  //       <div className="container mx-auto flex justify-between items-center">
+  //         <Link to="/" className="text-2xl font-bold text-gray-800 tracking-wider">
+  //           Citizens
+  //         </Link>
+  //         <div className="w-24 h-10 bg-gray-200 animate-pulse rounded-full"></div> {/* Placeholder */}
+  //       </div>
+  //     </header>
+  //   );
+  // }
 
   return (
     <header className="bg-white p-4 shadow-sm">

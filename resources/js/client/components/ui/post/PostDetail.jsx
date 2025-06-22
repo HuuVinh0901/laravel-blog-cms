@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getPostById } from '../../../../api/apiClient';
-import Loading from '../../Loading';
+import { getPostById } from '../../../../shared/api/apiClient';
+import Loading from '../../../../shared/components/Loading';
 const PostDetail = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);

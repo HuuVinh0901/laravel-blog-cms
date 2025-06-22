@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'jwt.cookie' => \App\Http\Middleware\JwtMiddleware::class,
             'refresh.token' => \App\Http\Middleware\RefreshTokenMiddleware::class,
+            'check.admin' => \App\Http\Middleware\CheckAdminToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getPosts } from '../../../../api/apiClient';
-import Loading from '../../Loading';
+import { getPosts } from '../../../../shared/api/apiClient';
+import Loading from '../../../../shared/components/Loading';
 import fallbackImage from '../../../../../../public/images/no-image.png'
 const NewsFeed = () => {
     const [posts, setPosts] = useState([]);

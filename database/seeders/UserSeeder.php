@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $users = [
@@ -27,14 +24,15 @@ class UserSeeder extends Seeder
             ['name' => 'Julia Tran', 'email' => 'julia@example.com'],
         ];
 
-        foreach ($users as $user) {
+        foreach ($users as $index => $user) {
             User::updateOrCreate(
-                ['email' => $user['email']], 
+                ['email' => $user['email']],
                 [
                     'name' => $user['name'],
                     'email_verified_at' => now(),
-                    'password' => Hash::make('123456'), 
+                    'password' => Hash::make('123456'),
                     'remember_token' => \Illuminate\Support\Str::random(10),
+                    'role' => $index === 0 ? 'admin' : 'user', // 👈 Gán role theo vị trí
                 ]
             );
         }

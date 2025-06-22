@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getUserById, getPostByUser } from '../../api/apiClient';
+import { getUserById, getPostByUser } from '../../shared/api/apiClient';
 import defaultAvatar from '../../../../public/images/default-avatar.png';
 import fallbackImage from '../../../../public/images/no-image.png';
-import Loading from '../components/Loading';
-import { useAuth } from '../../context/AuthContext';
+import Loading from '../../shared/components/Loading';
+import { useAuth } from '../../shared/context/AuthContext';
 
 const ProfileBase = () => {
     const { userId } = useParams();
