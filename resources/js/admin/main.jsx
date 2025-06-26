@@ -9,6 +9,7 @@ import CategoryManagement from './components/CategoryManagement';
 import { AuthProvider } from '../shared/context/AuthContext';
 import Loading from '../shared/components/Loading';
 import { useAuth } from '../shared/context/AuthContext';
+import ContactManagement from './components/ContactManagement';
 const container = document.getElementById('admin');
 const root = ReactDOM.createRoot(container);
 
@@ -32,6 +33,7 @@ const AdminApp = () => {
             <Route path="/admin/users" element={<UserManagement />} />
             <Route path="/admin/posts" element={<PostManagement />} />
             <Route path="/admin/categories" element={<CategoryManagement />} />
+            <Route path="/admin/contacts" element={<ContactManagement />} />
           </Routes>
         </div>
       </div>

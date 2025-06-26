@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
@@ -36,4 +37,11 @@ Route::post('/upload-image', [UploadController::class, 'uploadImage']);
 //ADmin
 Route::prefix('admin')->middleware('check.admin')->group(function () {
     Route::get('/users', [UserController::class, 'index']);
+    Route::get('/contacts', [ContactController::class, 'index']);
+    Route::delete('/contacts/{id}', [ContactController::class, 'destroy']);
+    Route::post('/contacts/{id}/reply', [ContactController::class, 'reply']);
 });
+
+//contact
+
+Route::post('/contacts', [ContactController::class, 'store']);

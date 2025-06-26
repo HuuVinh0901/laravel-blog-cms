@@ -4,9 +4,10 @@ import { useAuth } from '../../shared/context/AuthContext';
 import defaultAvatar from '../../../../public/images/default-avatar.png';
 
 const Header = () => {
-  const { user, logout, loading } = useAuth(); 
+  const { user, logout, loading } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
   const handleAvatarClick = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -24,7 +25,6 @@ const Header = () => {
     };
   }, []);
 
-  // Nếu đang loading, hiển thị placeholder hoặc không render gì
   // if (loading) {
   //   return (
   //     <header className="bg-white p-4 shadow-sm">
@@ -32,7 +32,7 @@ const Header = () => {
   //         <Link to="/" className="text-2xl font-bold text-gray-800 tracking-wider">
   //           Citizens
   //         </Link>
-  //         <div className="w-24 h-10 bg-gray-200 animate-pulse rounded-full"></div> {/* Placeholder */}
+  //         <div className="w-24 h-10 bg-gray-200 animate-pulse rounded-full"></div>
   //       </div>
   //     </header>
   //   );
@@ -49,7 +49,7 @@ const Header = () => {
           <Link to="/" className="hover:text-blue-600 font-medium">Trang chủ</Link>
           <Link to="/new-feed" className="hover:text-blue-600 font-medium">Blog</Link>
           <Link to="/category/1" className="hover:text-blue-600 font-medium">Danh mục</Link>
-          <Link to="/about" className="hover:text-blue-600 font-medium">Về chúng tôi</Link>
+          <Link to="/contact" className="hover:text-blue-600 font-medium">Liên hệ</Link>
         </nav>
         <div className="flex items-center space-x-6">
           {user ? (
@@ -78,7 +78,10 @@ const Header = () => {
                     Hồ sơ
                   </Link>
                   <button
-                    onClick={() => { logout(); setIsDropdownOpen(false); }}
+                    onClick={() => {
+                      logout();
+                      setIsDropdownOpen(false);
+                    }}
                     className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-b-lg"
                   >
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

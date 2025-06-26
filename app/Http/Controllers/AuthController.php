@@ -111,7 +111,10 @@ class AuthController extends Controller
     public function me()
     {
         $user = JWTAuth::user();
-
+        $refreshToken = RefreshToken::where('user_id', $user->id)->latest()->first();
+        if ($refreshToken && $refreshToken->revoked) {
+            return response()->json(['error' => 'User has logged out'], 401);
+        }
         return response()->json($user);
     }
     protected function validateUserCredentials($email, $password)

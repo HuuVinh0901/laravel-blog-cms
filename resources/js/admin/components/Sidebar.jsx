@@ -8,7 +8,7 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     logout();
-    window.location.href = '/'; // Chuyển hướng sau khi logout
+    window.location.href = '/'; 
   };
 
   return (
@@ -65,7 +65,7 @@ const Sidebar = () => {
                 `flex items-center p-2 rounded-lg ${isActive ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} transition duration-200`
               }
             >
-              <span className="mr-3">👤</span> Users
+              <span className="mr-3">👤</span> Tài khoản
             </NavLink>
           </li>
           <li>
@@ -75,7 +75,7 @@ const Sidebar = () => {
                 `flex items-center p-2 rounded-lg ${isActive ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} transition duration-200`
               }
             >
-              <span className="mr-3">📝</span> Posts
+              <span className="mr-3">📝</span> Bài viết
             </NavLink>
           </li>
           <li>
@@ -85,7 +85,17 @@ const Sidebar = () => {
                 `flex items-center p-2 rounded-lg ${isActive ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} transition duration-200`
               }
             >
-              <span className="mr-3">📑</span> Categories
+              <span className="mr-3">📑</span> Danh mục
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/admin/contacts"
+              className={({ isActive }) =>
+                `flex items-center p-2 rounded-lg ${isActive ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} transition duration-200`
+              }
+            >
+              <span className="mr-3">📑</span> Liên hệ
             </NavLink>
           </li>
         </ul>

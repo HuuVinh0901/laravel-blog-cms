@@ -12,6 +12,7 @@ import OtherProfile from './components/ui/profile/OtherProfile';
 import CreatePost from './components/ui/post/CreatePost';
 import NewsFeed from './components/ui/newFeed/NewsFeed';
 import CategoryDetail from './components/ui/category/CategoryDetail';
+import ContactForm from './components/ContactForm';
 import { AuthProvider } from '../shared/context/AuthContext';
 const container = document.getElementById('client');
 const root = ReactDOM.createRoot(container);
@@ -30,7 +31,7 @@ const ClientApp = () => (
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/new-feed" element={<NewsFeed />} />
           <Route path="/category/:categoryId" element={<CategoryDetail />} />
-        
+          <Route path="/contact" element={<ContactForm />} />
         </Routes>
       </div>
       <Footer />

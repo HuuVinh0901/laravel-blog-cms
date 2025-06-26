@@ -41,7 +41,6 @@ const LoginForm = () => {
     try {
       const data = await loginUser(formData); 
       toast.success('Đăng nhập thành công!');
-      console.log(data.data.role);
       if (data.data.role === 'admin') {
         window.location.href = '/admin';
       } else {
